@@ -36,6 +36,8 @@ Item {
         width: (bigGrid.width - (bigGrid.columns - 1) * bigGrid.spacing) / bigGrid.columns
         height: (bigGrid.height - (bigGrid.columns - 1) * bigGrid.spacing) / bigGrid.columns
         radius: parent.width / 60
+        border.color: "#666"
+        border.width: cell.disabled ? 0 : width/40
 
         UltimateTicTacToeCell {
           id: cell

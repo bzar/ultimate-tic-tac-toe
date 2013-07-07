@@ -30,6 +30,8 @@ Grid {
       width: (grid.width - (grid.columns - 1) * grid.spacing) / grid.columns
       height: (grid.height - (grid.columns - 1) * grid.spacing) / grid.columns
       radius: height/10
+      border.color: cell.owner === 1 ? "red" : "blue"
+      border.width: cell.owner !== 0 && cell.highlighted ? width/20 : 0
 
       TicTacToeCell {
         id: cell
