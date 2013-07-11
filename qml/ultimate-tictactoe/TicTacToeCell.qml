@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
 Item {
+  id: cell
+
   signal clicked()
   property int owner: 0
   property bool disabled: false
@@ -27,7 +29,7 @@ Item {
     visible: false
   }
 
-  onOwnerChanged: { if(animateOwnerChange) ownerChangeAnimation.start() }
+  onOwnerChanged: { if(animateOwnerChange && owner !== 0) ownerChangeAnimation.start() }
 
   SequentialAnimation {
     id: ownerChangeAnimation
@@ -43,7 +45,7 @@ Item {
 
   MouseArea {
     anchors.fill: parent
-    enabled: !disabled
+    enabled: !cell.disabled
     onClicked: parent.clicked()
   }
 }

@@ -6,7 +6,14 @@ Grid {
   spacing: width/20
 
   signal clicked(int cellIndex)
-  property bool disabled: false
+
+  property bool disabled
+
+  onDisabledChanged: {
+    for(var i = 0; i < children.size; ++i) {
+      getCell(i).disabled = disabled;
+    }
+  }
 
   function getCell(index) {
     return children[index].cell;
