@@ -3,7 +3,7 @@ Qt.include("ai.js")
 var AIS = {
   random: randomAI,
   greedy: greedyAI,
-  montecarlo: montecarloAI,
+  montecarlo: customMontecarloAI(5000, 150, 10, 1, -1, 0),
   montecarlo1: customMontecarloAI(1000, 30, 10, 1, -1, 0),
   montecarlo2: customMontecarloAI(5000, 150, 10, 1, -1, 0)
 }

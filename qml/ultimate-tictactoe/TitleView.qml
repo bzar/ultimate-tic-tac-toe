@@ -68,7 +68,7 @@ Item {
       radius: width / 32
       onClicked: view.twoPlayerGame()
     }
-
+/*
     Button {
       label: "AI Test"
       textColor: "#fff"
@@ -79,7 +79,7 @@ Item {
       radius: width / 32
       onClicked: view.aiTest()
     }
-
+*/
     Button {
       label: "Quit"
       textColor: "#fff"
