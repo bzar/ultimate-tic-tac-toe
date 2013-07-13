@@ -133,9 +133,12 @@ Item {
         getCell(i).owner = 0;
         for(var j = 0; j < 9; ++j) {
           getCell(i).grid.getCell(j).owner = 0;
+          getCell(i).grid.getCell(j).disabled = false;
         }
       }
       turn = 1;
+      previous = null;
+      previousMove = 0;
     }
   }
 

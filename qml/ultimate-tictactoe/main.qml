@@ -54,6 +54,7 @@ Rectangle {
     onTwoPlayerGame: {
       gameView.singlePlayer = false;
       gameView.reset();
+      app.state = "game"
     }
 
     onQuit: Qt.quit()
@@ -70,7 +71,7 @@ Rectangle {
             {type: "montecarlo", i: 500, c: 15, n: 10},
             {type: "montecarlo", i: 1000, c: 30, n: 10},
             {type: "montecarlo", i: 5000, c: 150, n: 10}
-      ]
+      ];
       gameView.aiType = aiTypes[level];
       gameView.singlePlayer = true;
       gameView.reset();
