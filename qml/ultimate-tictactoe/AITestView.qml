@@ -69,79 +69,88 @@ Item {
   }
 
   Column {
+    spacing: 8
     Row {
       Button {
-        label: "Random vs. Greedy"
+        label.text: "Random vs. Greedy"
         onClicked: runRandomVsGreedy()
-        color: "#444"
         width: 300
       }
       Column {
         Text {
           text: "Random: " + gr_r
+          color: "white"
         }
         Text {
           text: "Greedy: " + gr_g
+          color: "white"
         }
         Text {
           text: "Ties: " + gr_tie
+          color: "white"
         }
       }
     }
     Row {
       Button {
-        label: "Random vs. MonteCarlo"
+        label.text: "Random vs. MonteCarlo"
         onClicked: runRandomVsMonteCarlo()
-        color: "#444"
         width: 300
       }
       Column {
         Text {
           text: "Random: " + rmc_r
+          color: "white"
         }
         Text {
           text: "MonteCarlo: " + rmc_mc
+          color: "white"
         }
         Text {
           text: "Ties: " + rmc_tie
+          color: "white"
         }
       }
     }
     Row {
       Button {
-        label: "Greedy vs. MonteCarlo"
+        label.text: "Greedy vs. MC"
         onClicked: runGreedyVsMonteCarlo()
-        color: "#444"
         width: 300
       }
       Column {
         Text {
           text: "Greedy: " + gmc_g
+          color: "white"
         }
         Text {
           text: "MonteCarlo: " + gmc_mc
+          color: "white"
         }
         Text {
           text: "Ties: " + gmc_tie
+          color: "white"
         }
       }
     }
     Row {
       Button {
-        label: "MonteCarlo1 vs. MonteCarlo2"
+        label.text: "MC1 vs. MC2"
         onClicked: runMonteCarloVsMonteCarlo()
-        color: "#444"
         width: 300
       }
       Column {
         Text {
           text: "MonteCarlo1: " + mcmc_mc1
+          color: "white"
         }
         Text {
           text: "MonteCarlo2: " + mcmc_mc2
+          color: "white"
         }
         Text {
           text: "Ties: " + mcmc_tie
+          color: "white"
         }
       }
     }

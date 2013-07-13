@@ -13,7 +13,7 @@ Item {
     anchors.fill: parent
     disabled: true
     z: 1
-    opacity: 0.7
+    opacity: 0.9
   }
 
   TicTacToeGrid {

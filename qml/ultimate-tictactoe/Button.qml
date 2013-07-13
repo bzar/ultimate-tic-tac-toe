@@ -1,6 +1,77 @@
 import QtQuick 2.0
+import QtGraphicalEffects 1.0
 
 Item {
+  id: button
+
+  width: 256
+  height: 64
+
+  signal clicked
+
+  property color color: "#fff"
+  property int borderWidth: 1
+  property alias label: label
+
+  Rectangle {
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: borderWidth
+    color: parent.color
+  }
+
+  Rectangle {
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: borderWidth
+    color: parent.color
+  }
+
+  Text {
+    id: label
+    color: Qt.rgba(0,0,0,0)
+    anchors.fill: parent
+    anchors.margins: 4
+    antialiasing: true
+    font.letterSpacing: 1
+    font.pixelSize: 196
+    font.bold: true
+    fontSizeMode: Text.Fit
+    verticalAlignment: Text.Center
+    horizontalAlignment: Text.Center
+    style: Text.Outline
+    styleColor: parent.color
+  }
+  Glow {
+    anchors.fill: label
+    radius: 4
+    samples: 16
+    color: button.color
+    source: label
+  }
+
+  MouseArea {
+    id: mouseArea
+    anchors.fill: parent
+    onClicked: button.clicked()
+  }
+
+  Rectangle {
+    z: -1
+    anchors.fill: parent
+    opacity: 0.3
+    visible: mouseArea.pressed
+    gradient: Gradient {
+      GradientStop { color: "black"; position: 0 }
+      GradientStop { color: Qt.darker(button.color); position: 0.5 }
+      GradientStop { color: button.color; position: 1 }
+    }
+  }
+}
+
+/*Item {
     id: button
     property color color: "lightgrey"
     property alias label: labelText.text
@@ -93,3 +164,4 @@ Item {
 
 }
 
+*/

@@ -20,15 +20,14 @@ Item {
     id: bigGrid
     anchors.fill: parent
     columns: 3
-    spacing: width/30
+    spacing: width/60
 
     Repeater {
       model: 9
       delegate: Rectangle {
         id: delegate
         property alias cell: cell
-        color: "#ddd"
-        opacity: cell.disabled ? 0.5 : 0.9
+        color: Qt.rgba(0,0,0,0)
 
         Behavior on opacity {
           NumberAnimation { duration: 100 }
@@ -36,8 +35,8 @@ Item {
         width: (bigGrid.width - (bigGrid.columns - 1) * bigGrid.spacing) / bigGrid.columns
         height: (bigGrid.height - (bigGrid.columns - 1) * bigGrid.spacing) / bigGrid.columns
         radius: parent.width / 60
-        border.color: "#666"
-        border.width: cell.disabled ? 0 : width/40
+        border.color: cell.disabled ? "#444" : "#ccc"
+        border.width: cell.disabled ? 1 : width/40
 
         UltimateTicTacToeCell {
           id: cell

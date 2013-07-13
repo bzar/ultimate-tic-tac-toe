@@ -25,7 +25,7 @@ Item {
   TicTacToeCell {
     anchors.fill: parent
     owner: game.turn
-    opacity: 0.3
+    opacity: 0.7
     disabled: true
     animateOwnerChange: false
   }
@@ -44,7 +44,7 @@ Item {
     property int previousMove
 
     anchors.fill: parent
-    anchors.margins: parent.width/20
+    anchors.margins: 8
     onClicked: if(!singlePlayer || turn === 1) playTurn(bigCellIndex, cellIndex)
 
     function playTurn(bigCellIndex, cellIndex) {
@@ -61,7 +61,6 @@ Item {
 
       cell.owner = turn;
       cell.highlighted = true;
-      cell.disabled = true;
       previous = cell;
       previousMove = bigCellIndex * 9 + cellIndex;
 
@@ -86,7 +85,7 @@ Item {
 
       turn = winner !== null && winner !== 0 ? winner : turn == 1 ? 2 : 1;
       for(i = 0; i < 9; ++i) {
-        getCell(i).disabled = (winner !== null && winner !== 0) || (i !== nextBigCellIndex && nextBigCellHasRoom);
+        getCell(i).disabled = winner !== null || (i !== nextBigCellIndex && nextBigCellHasRoom);
       }
 
       if(winner !== null) {
@@ -133,7 +132,6 @@ Item {
         getCell(i).owner = 0;
         for(var j = 0; j < 9; ++j) {
           getCell(i).grid.getCell(j).owner = 0;
-          getCell(i).grid.getCell(j).disabled = false;
         }
       }
       turn = 1;

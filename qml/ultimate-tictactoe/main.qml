@@ -6,8 +6,8 @@ Rectangle {
   width: 480
   height: 480
   gradient: Gradient {
-    GradientStop { color: "#ccc"; position: 0 }
-    GradientStop { color: "#666"; position: 1 }
+    GradientStop { color: "#444"; position: 0 }
+    GradientStop { color: "#111"; position: 1 }
   }
 
   states: [
