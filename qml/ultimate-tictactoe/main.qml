@@ -20,10 +20,16 @@ Rectangle {
       name: "game"
       PropertyChanges { target: titleView; visible: false }
       PropertyChanges { target: gameView; visible: true }
+    },
+    State {
+      name: "aitest"
+      PropertyChanges { target: titleView; visible: false }
+      PropertyChanges { target: gameView; visible: false }
+      PropertyChanges { target: aiTestView; visible: true }
     }
   ]
 
-  state: "title"
+  state: "aitest"
 
   TitleView {
     id: titleView
@@ -51,5 +57,10 @@ Rectangle {
     height: width
     visible: false
     onDone: app.state = "title"
+  }
+
+  AITestView {
+    id: aiTestView
+    anchors.fill: parent
   }
 }

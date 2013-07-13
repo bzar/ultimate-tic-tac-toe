@@ -41,6 +41,7 @@ Item {
 
     property int turn: 1
     property var previous
+    property int previousMove
 
     anchors.fill: parent
     anchors.margins: parent.width/20
@@ -62,9 +63,11 @@ Item {
       cell.highlighted = true;
       cell.disabled = true;
       previous = cell;
+      previousMove = bigCellIndex * 9 + cellIndex;
 
       if(bigCell.cell.owner === 0) {
-        bigCell.cell.owner = Rules.gridWinner(grid.getOwnerArray())
+        var gridWinner = Rules.gridWinner(grid.getOwnerArray());
+        bigCell.cell.owner = gridWinner === null ? 0 : gridWinner;
       }
 
       var nextBigCellIndex = cellIndex;
@@ -81,12 +84,12 @@ Item {
 
       var winner = Rules.gridWinner(getOwnerArray());
 
-      turn = winner !== 0 ? winner : turn == 1 ? 2 : 1;
+      turn = winner !== null && winner !== 0 ? winner : turn == 1 ? 2 : 1;
       for(i = 0; i < 9; ++i) {
-        getCell(i).disabled = winner !== 0 || (i !== nextBigCellIndex && nextBigCellHasRoom);
+        getCell(i).disabled = (winner !== null && winner !== 0) || (i !== nextBigCellIndex && nextBigCellHasRoom);
       }
 
-      if(winner !== 0) {
+      if(winner !== null) {
         view.state = "gameover";
       } else if(view.singlePlayer && turn === 2) {
         aiTimer.restart();
@@ -99,17 +102,16 @@ Item {
       running: false
       onTriggered: {
         var board = [];
-        var enabled = []
 
         for(var i = 0; i < 9; ++i) {
           board = board.concat(game.getCell(i).grid.getOwnerArray());
-          if(!game.getCell(i).disabled) {
-            enabled.push(i);
-          }
         }
 
-        var solution = AI.think(board, enabled);
-        game.playTurn(Math.floor(solution / (3*3)), solution % (3*3));
+        var solution = AI.think(board, game.previousMove, 2);
+        var bigCellIndex = Math.floor(solution / (3*3));
+        var cellIndex = solution % (3*3);
+        console.log(bigCellIndex, cellIndex);
+        game.playTurn(bigCellIndex, cellIndex);
       }
     }
 
