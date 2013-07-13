@@ -1,11 +1,11 @@
 import QtQuick 2.0
 import "rules.js" as Rules
-import "ai.js" as AI
 
 Item {
   id: view
 
   property bool singlePlayer: false
+  property var aiType
 
   signal done
 
@@ -98,7 +98,7 @@ Item {
 
     Timer {
       id: aiTimer
-      interval: 1000
+      interval: 500
       running: false
       onTriggered: {
         var board = [];
@@ -107,10 +107,20 @@ Item {
           board = board.concat(game.getCell(i).grid.getOwnerArray());
         }
 
-        var solution = AI.think(board, game.previousMove, 2);
+        aiWorker.sendMessage({aiType: aiType,
+                               board: board,
+                               previousMove: game.previousMove,
+                               player: 2});
+      }
+    }
+
+    WorkerScript {
+      id: aiWorker
+      source: "aiWorker.js"
+      onMessage: {
+        var solution = messageObject.solution;
         var bigCellIndex = Math.floor(solution / (3*3));
         var cellIndex = solution % (3*3);
-        console.log(bigCellIndex, cellIndex);
         game.playTurn(bigCellIndex, cellIndex);
       }
     }

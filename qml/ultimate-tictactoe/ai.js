@@ -23,8 +23,17 @@ Qt.include("rules.js")
   * enabled is an array of big grid indices to which the AI can play
   */
 
-function think(board, previousMove, player) {
-  //return randomAI(board, previousMove, player);
+function think(aiType, board, previousMove, player) {
+  if(aiType === "random") {
+    return randomAI(board, previousMove, player);
+  } else if(aiType === "greedy") {
+    return greedyAI(board, previousMove, player);
+  } else if(aiType === "montecarlo") {
+    var func = customMontecarloAI(aiType.i, aiType.c, aiType.n, 1, -1, 0);
+    return func(board, previousMove, player);
+  }
+
+  //
   //return greedyAI(board, previousMove, player);
   return montecarloAI(board, previousMove, player);
 }

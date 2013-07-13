@@ -5,6 +5,7 @@ Item {
 
   signal onePlayerGame
   signal twoPlayerGame
+  signal aiTest
   signal quit
 
   Column {
@@ -66,6 +67,17 @@ Item {
       height: view.height / 12
       radius: width / 32
       onClicked: view.twoPlayerGame()
+    }
+
+    Button {
+      label: "AI Test"
+      textColor: "#fff"
+      color: "#ddd"
+      font.pixelSize: height * 2 / 3
+      width: view.width / 2
+      height: view.height / 12
+      radius: width / 32
+      onClicked: view.aiTest()
     }
 
     Button {
