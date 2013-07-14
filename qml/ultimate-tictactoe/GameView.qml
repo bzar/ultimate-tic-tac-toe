@@ -6,6 +6,7 @@ Item {
 
   property bool singlePlayer: false
   property var aiType
+  property bool aiIsThinking: false
 
   signal done
 
@@ -106,6 +107,7 @@ Item {
           board = board.concat(game.getCell(i).grid.getOwnerArray());
         }
 
+        aiIsThinking = true;
         aiWorker.sendMessage({aiType: aiType,
                                board: board,
                                previousMove: game.previousMove,
@@ -117,10 +119,32 @@ Item {
       id: aiWorker
       source: "aiWorker.js"
       onMessage: {
+        aiIsThinking = false;
         var solution = messageObject.solution;
         var bigCellIndex = Math.floor(solution / (3*3));
         var cellIndex = solution % (3*3);
         game.playTurn(bigCellIndex, cellIndex);
+      }
+    }
+
+    Image {
+      id: thinkingIndicator
+      source: "cog.png"
+      visible: aiIsThinking
+      anchors.top: parent.top
+      anchors.right: parent.right
+      NumberAnimation on rotation {
+        from: 0
+        to: 360
+        duration: 3000
+        loops: Animation.Infinite
+        running: thinkingIndicator.visible
+      }
+      SequentialAnimation on opacity {
+        loops: Animation.Infinite
+        running: thinkingIndicator.visible
+        NumberAnimation { from: 0.5; to: 1; duration: 500; easing.type: Easing.OutCubic }
+        NumberAnimation { from: 1; to: 0.5; duration: 500; easing.type: Easing.InCubic }
       }
     }
 
