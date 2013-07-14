@@ -25,17 +25,13 @@ Qt.include("rules.js")
 
 function think(aiType, board, previousMove, player) {
   if(aiType.type === "random") {
-    console.log("think - random");
     return randomAI(board, previousMove, player);
   } else if(aiType.type === "greedy") {
-    console.log("think - greedy");
     return greedyAI(board, previousMove, player);
   } else if(aiType.type === "montecarlo") {
-    console.log("think - montecarlo");
     var func = customMontecarloAI(aiType.i, aiType.c, aiType.n, 1, -1, 0);
     return func(board, previousMove, player);
   } else {
-    console.log("think - default");
     return montecarloAI(board, previousMove, player);
   }
 }
