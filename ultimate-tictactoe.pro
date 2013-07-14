@@ -1,3 +1,6 @@
+# Use C++11
+CONFIG += c++11
+
 # Add more folders to ship with the application, here
 folder_01.source = qml/ultimate-tictactoe
 folder_01.target = qml
@@ -12,7 +15,8 @@ QML_IMPORT_PATH =
 # MOBILITY +=
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    ultimatetictactoemontecarloai.cpp
 
 # Installation path
 # target.path =
@@ -50,3 +54,6 @@ OTHER_FILES += \
     android/res/values-fa/strings.xml \
     android/res/values-el/strings.xml \
     android/version.xml
+
+HEADERS += \
+    ultimatetictactoemontecarloai.h

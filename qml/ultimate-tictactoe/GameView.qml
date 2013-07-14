@@ -1,5 +1,7 @@
 import QtQuick 2.0
 import "rules.js" as Rules
+import "ai.js" as AI
+import UltimateTicTacToeAI 1.0
 
 Item {
   id: view
@@ -96,6 +98,18 @@ Item {
       }
     }
 
+    Montecarlo {
+      id: ai
+      c: 300
+      maxIterations: 5000
+      onResult: {
+        aiIsThinking = false;
+        var bigCellIndex = Math.floor(move / (3*3));
+        var cellIndex = move % (3*3);
+        game.playTurn(bigCellIndex, cellIndex);
+      }
+    }
+
     Timer {
       id: aiTimer
       interval: 500
@@ -108,10 +122,16 @@ Item {
         }
 
         aiIsThinking = true;
-        aiWorker.sendMessage({aiType: aiType,
+        /*aiWorker.sendMessage({aiType: aiType,
                                board: board,
                                previousMove: game.previousMove,
-                               player: 2});
+                               player: 2});*/
+        /*var solution = AI.think(aiType, board, game.previousMove, 2);
+        var bigCellIndex = Math.floor(solution / (3*3));
+        var cellIndex = solution % (3*3);
+        game.playTurn(bigCellIndex, cellIndex);
+        aiIsThinking = false;*/
+        ai.think(board, game.previousMove, 2);
       }
     }
 

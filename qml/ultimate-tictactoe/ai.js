@@ -29,8 +29,9 @@ function think(aiType, board, previousMove, player) {
   } else if(aiType.type === "greedy") {
     return greedyAI(board, previousMove, player);
   } else if(aiType.type === "montecarlo") {
-    var func = customMontecarloAI(aiType.i, aiType.c, aiType.n, 1, -1, 0);
-    return func(board, previousMove, player);
+    return cppMontecarlo.think(board, previousMove, player, aiType.i, aiType.c, aiType.n);
+    //var func = customMontecarloAI(aiType.i, aiType.c, aiType.n, 1, -1, 0);
+    //return func(board, previousMove, player);
   } else {
     return montecarloAI(board, previousMove, player);
   }
