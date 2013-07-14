@@ -42,6 +42,26 @@ Rectangle {
   ]
 
   state: "title"
+  focus: true
+
+  // Workaround for application segfaulting if Qt.quit is called inside Keys.onPressed
+  Timer {
+    id: quitHack
+    interval: 1
+    onTriggered: Qt.quit();
+  }
+
+  Keys.onPressed: {
+    // Depends on android/qtproject/qt5/android/bindings/QtActivity.java back button hack
+    if(event.key === Qt.Key_MediaPrevious || event.key === Qt.Key_Escape) {
+      if(app.state !== "title") {
+        app.state = "title";
+        event.accepted = true;
+      } else {
+        quitHack.start();
+      }
+    }
+  }
 
   TitleView {
     id: titleView
@@ -67,10 +87,10 @@ Rectangle {
     onSelect: {
       var aiTypes = [
             {type: "greedy"},
-            {type: "montecarlo", i: 100, c: 10, n: 10},
             {type: "montecarlo", i: 500, c: 15, n: 10},
             {type: "montecarlo", i: 1000, c: 30, n: 10},
-            {type: "montecarlo", i: 5000, c: 150, n: 10}
+            {type: "montecarlo", i: 5000, c: 150, n: 10},
+            {type: "montecarlo", i: 10000, c: 300, n: 10}
       ];
       gameView.aiType = aiTypes[level];
       gameView.singlePlayer = true;

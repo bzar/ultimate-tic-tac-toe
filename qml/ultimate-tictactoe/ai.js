@@ -24,18 +24,20 @@ Qt.include("rules.js")
   */
 
 function think(aiType, board, previousMove, player) {
-  if(aiType === "random") {
+  if(aiType.type === "random") {
+    console.log("think - random");
     return randomAI(board, previousMove, player);
-  } else if(aiType === "greedy") {
+  } else if(aiType.type === "greedy") {
+    console.log("think - greedy");
     return greedyAI(board, previousMove, player);
-  } else if(aiType === "montecarlo") {
+  } else if(aiType.type === "montecarlo") {
+    console.log("think - montecarlo");
     var func = customMontecarloAI(aiType.i, aiType.c, aiType.n, 1, -1, 0);
     return func(board, previousMove, player);
+  } else {
+    console.log("think - default");
+    return montecarloAI(board, previousMove, player);
   }
-
-  //
-  //return greedyAI(board, previousMove, player);
-  return montecarloAI(board, previousMove, player);
 }
 
 function pickRandom(arr) {
@@ -231,11 +233,10 @@ function montecarlo(n, bias, maxChildrenPerNode,
 
   var root = {parent: null, children: [], moves: [], n: 1, v: 0, ctx: initialCtx}
 
-  for(var i = 0; i < n; ++i) {
+  for(var i = 0; i < n || n < 0; ++i) {
     var leaf = select(root);
     var leafScore = scoreFunc(leaf.ctx);
     if(leafScore !== null) {
-      //console.log("terminal node found in", i + 1, "iterations, score =", leafScore);
       break;
     }
 
@@ -244,13 +245,6 @@ function montecarlo(n, bias, maxChildrenPerNode,
     backpropagate(node, score);
   }
 
-  /*
-  console.log("v | n | ucb | move");
-  for(i = 0; i < root.children.length; ++i) {
-    var child = root.children[i];
-    console.log(child.v, child.n, nodeUCBValue(child), child.moves[0]);
-  }
-  */
   return pickBestChild(root).moves[0];
 }
 
