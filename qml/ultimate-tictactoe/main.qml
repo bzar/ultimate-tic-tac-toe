@@ -86,11 +86,11 @@ Rectangle {
     anchors.fill: parent
     onSelect: {
       var aiTypes = [
-            {type: "greedy"},
-            {type: "montecarlo", i: 500, c: 15, n: 10},
-            {type: "montecarlo", i: 1000, c: 30, n: 10},
-            {type: "montecarlo", i: 5000, c: 150, n: 10},
-            {type: "montecarlo", i: 10000, c: 300, n: 10}
+            {i: 500, c: 15, n: 10},
+            {i: 1000, c: 30, n: 10},
+            {i: 5000, c: 150, n: 10},
+            {i: 10000, c: 300, n: 10},
+            {i: 20000, c: 600, n: 10}
       ];
       gameView.aiType = aiTypes[level];
       gameView.singlePlayer = true;

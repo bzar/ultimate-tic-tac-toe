@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVariantList>
 #include <QList>
+#include <QFutureWatcher>
 
 class UltimateTicTacToeMontecarloAI : public QObject
 {
@@ -31,12 +32,14 @@ signals:
   void maxChildrenChanged(int value);
 
 public slots:
-  int think(QVariantList board, int previousMove, int player);
+  void think(QVariantList board, int previousMove, int player);
 
 private:
   int maxIterations = 1000;
   int c = 15;
   int maxChildren = 10;
+
+  QFutureWatcher<int> futureWatcher;
 
   typedef QList<int> Board;
   typedef int Move;
@@ -57,21 +60,22 @@ private:
 
   typedef QList<Node> Nodes;
 
-  int select(Nodes const& nodes, int const current = 0);
-  int expand(int leafIndex, Nodes& nodes, const int player);
-  int simulate(Board board, int const previousMove, int const player);
-  void backpropagate(int const nodeIndex, Nodes& nodes, int const score);
+  int realThink(Board const& board, int const previousMove, int const player) const;
+  int select(Nodes const& nodes, int const current = 0) const;
+  int expand(int leafIndex, Nodes& nodes, const int player) const;
+  int simulate(Board board, int const previousMove, int const player) const;
+  void backpropagate(int const nodeIndex, Nodes& nodes, int const score) const;
 
-  int scoreBoard(Board const& board, int const player);
-  int scoreGrid(Board const& board, int const player, int const grid = 0);
-  qreal nodeUCBValue(Node const& node, Nodes const& nodes);
-  int pickBestChild(Node const& node, Nodes const& nodes, bool const ucb = true);
-  Moves movementOptions(Board const& board, int const previousMove);
-  Board playMove(Board board, Move const move, int const player);
-  int otherPlayer(int const player);
-  int gridWinner(Board const& board, int grid = 0);
-  bool boardFull(Board const& board);
-  GameState gameState(Board const& board, int player);
+  int scoreBoard(Board const& board, int const player) const;
+  int scoreGrid(Board const& board, int const player, int const grid = 0) const;
+  qreal nodeUCBValue(Node const& node, Nodes const& nodes) const;
+  int pickBestChild(Node const& node, Nodes const& nodes, bool const ucb = true) const;
+  Moves movementOptions(Board const& board, int const previousMove) const;
+  Board playMove(Board board, Move const move, int const player) const;
+  int otherPlayer(int const player) const;
+  int gridWinner(Board const& board, int grid = 0) const;
+  bool boardFull(Board const& board) const;
+  GameState gameState(Board const& board, int player) const;
 
 };
 

@@ -100,8 +100,9 @@ Item {
 
     Montecarlo {
       id: ai
-      c: 300
-      maxIterations: 5000
+      c: view.aiType.c
+      maxIterations: view.aiType.i
+      maxChildren: view.aiType.n
       onResult: {
         aiIsThinking = false;
         var bigCellIndex = Math.floor(move / (3*3));
