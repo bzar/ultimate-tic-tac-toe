@@ -11,20 +11,20 @@ int const BOARD_SIZE  = GRID_SIZE * GRID_SIZE;
 int UltimateTicTacToeMontecarloAI::scoreBoard(Board const& board, int const player) const
 {
   int score = 0;
-  Board bigGrid;
-  bigGrid.reserve(GRID_SIZE);
   for(int i = 0; i < GRID_SIZE; ++i)
   {
-    score += scoreGrid(board, player, i);
-    bigGrid.append(gridWinner(board, i));
+    if(board.bigGrid.at(i) == 0)
+    {
+      score += scoreGrid(board.grids, player, i);
+    }
   }
 
-  score += 9 * scoreGrid(bigGrid, player);
+  score += 9 * scoreGrid(board.bigGrid, player);
 
   return score;
 }
 
-int UltimateTicTacToeMontecarloAI::scoreGrid(Board const& board, int const player, int const grid) const
+int UltimateTicTacToeMontecarloAI::scoreGrid(Grid const& grid, int const player, int const gridIndex) const
 {
   int lines[][3] = {
     {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // horizontal
@@ -36,7 +36,7 @@ int UltimateTicTacToeMontecarloAI::scoreGrid(Board const& board, int const playe
   for(int i = 0; i < 8; ++i) {
     int lineScore = 0;
     for(int j = 0; j < 3; ++j) {
-      int owner = board.at(GRID_SIZE * grid + lines[i][j]);
+      int owner = grid.at(GRID_SIZE * gridIndex + lines[i][j]);
       if(owner == player) {
         lineScore += 1;
       } else if(owner != 0) {
@@ -97,7 +97,7 @@ UltimateTicTacToeMontecarloAI::Moves UltimateTicTacToeMontecarloAI::movementOpti
   for(int i = 0; i < GRID_SIZE; ++i)
   {
     int position = grid * GRID_SIZE + i;
-    if(board.at(position) == 0)
+    if(board.grids.at(position) == 0)
     {
       options.append(position);
     }
@@ -107,7 +107,7 @@ UltimateTicTacToeMontecarloAI::Moves UltimateTicTacToeMontecarloAI::movementOpti
   {
     for(int i = 0; i < BOARD_SIZE; ++i)
     {
-      if(board.at(i) == 0)
+      if(board.grids.at(i) == 0)
       {
         options.append(i);
       }
@@ -117,9 +117,18 @@ UltimateTicTacToeMontecarloAI::Moves UltimateTicTacToeMontecarloAI::movementOpti
   return options;
 }
 
-UltimateTicTacToeMontecarloAI::Board UltimateTicTacToeMontecarloAI::playMove(Board board, Move const move, int const player) const
+UltimateTicTacToeMontecarloAI::Board& UltimateTicTacToeMontecarloAI::playMove(Board& board, Move const move, int const player) const
 {
-  board[move] = player;
+  board.grids[move] = player;
+  int gridIndex = move / GRID_SIZE;
+  if(board.bigGrid.at(gridIndex) == 0)
+  {
+    int smallGridWinner = gridWinner(board.grids, gridIndex);
+    if(smallGridWinner != 0)
+    {
+      board.bigGrid[gridIndex] = smallGridWinner;
+    }
+  }
   return board;
 }
 
@@ -128,12 +137,32 @@ int UltimateTicTacToeMontecarloAI::otherPlayer(int const player) const
   return player == 1 ? 2 : 1;
 }
 
+int UltimateTicTacToeMontecarloAI::gridWinner(Grid const& grid, int gridIndex) const
+{
+  int o = gridIndex * GRID_SIZE;
+  // rows
+  if(grid.at(o+0) != 0 && grid.at(o+0) == grid.at(o+1) && grid.at(o+0) == grid.at(o+2)) return grid.at(o+0);
+  if(grid.at(o+3) != 0 && grid.at(o+3) == grid.at(o+4) && grid.at(o+3) == grid.at(o+5)) return grid.at(o+3);
+  if(grid.at(o+6) != 0 && grid.at(o+6) == grid.at(o+7) && grid.at(o+6) == grid.at(o+8)) return grid.at(o+6);
+
+  // columns
+  if(grid.at(o+0) != 0 && grid.at(o+0) == grid.at(o+3) && grid.at(o+0) == grid.at(o+6)) return grid.at(o+0);
+  if(grid.at(o+1) != 0 && grid.at(o+1) == grid.at(o+4) && grid.at(o+1) == grid.at(o+7)) return grid.at(o+1);
+  if(grid.at(o+2) != 0 && grid.at(o+2) == grid.at(o+5) && grid.at(o+2) == grid.at(o+8)) return grid.at(o+2);
+
+  // diagonals
+  if(grid.at(o+0) != 0 && grid.at(o+0) == grid.at(o+4) && grid.at(o+0) == grid.at(o+8)) return grid.at(o+0);
+  if(grid.at(o+6) != 0 && grid.at(o+6) == grid.at(o+4) && grid.at(o+6) == grid.at(o+2)) return grid.at(o+6);
+
+  return 0;
+}
+
 int UltimateTicTacToeMontecarloAI::expand(int leafIndex, Nodes& nodes, int const player) const
 {
   Node& node = nodes[leafIndex];
   node.children.reserve(maxChildren);
   Moves options = movementOptions(node.board, node.previousMove);
-  int turn = otherPlayer(node.board.at(node.previousMove));
+  int turn = otherPlayer(node.board.grids.at(node.previousMove));
 
   int mostPromisingChildIndex = -1;
   int mostPromisingChildScore = 0;
@@ -143,7 +172,8 @@ int UltimateTicTacToeMontecarloAI::expand(int leafIndex, Nodes& nodes, int const
     Move move = options.takeAt(qrand() % options.size());
     int childIndex = nodes.size();
     node.children.append(childIndex);
-    nodes.append( Node {0, 1, playMove(node.board, move, turn), move, leafIndex, Node::Children()});
+    Board newBoard(node.board);
+    nodes.append( Node {0, 1, playMove(newBoard, move, turn), move, leafIndex, Node::Children()});
     int score = scoreBoard(nodes.last().board, player);
     if(score > mostPromisingChildScore || mostPromisingChildIndex < 0)
     {
@@ -155,29 +185,9 @@ int UltimateTicTacToeMontecarloAI::expand(int leafIndex, Nodes& nodes, int const
   return mostPromisingChildIndex;
 }
 
-int UltimateTicTacToeMontecarloAI::gridWinner(Board const& board, int grid) const
-{
-  int o = grid * GRID_SIZE;
-  // rows
-  if(board.at(o+0) != 0 && board.at(o+0) == board.at(o+1) && board.at(o+0) == board.at(o+2)) return board.at(o+0);
-  if(board.at(o+3) != 0 && board.at(o+3) == board.at(o+4) && board.at(o+3) == board.at(o+5)) return board.at(o+3);
-  if(board.at(o+6) != 0 && board.at(o+6) == board.at(o+7) && board.at(o+6) == board.at(o+8)) return board.at(o+6);
-
-  // columns
-  if(board.at(o+0) != 0 && board.at(o+0) == board.at(o+3) && board.at(o+0) == board.at(o+6)) return board.at(o+0);
-  if(board.at(o+1) != 0 && board.at(o+1) == board.at(o+4) && board.at(o+1) == board.at(o+7)) return board.at(o+1);
-  if(board.at(o+2) != 0 && board.at(o+2) == board.at(o+5) && board.at(o+2) == board.at(o+8)) return board.at(o+2);
-
-  // diagonals
-  if(board.at(o+0) != 0 && board.at(o+0) == board.at(o+4) && board.at(o+0) == board.at(o+8)) return board.at(o+0);
-  if(board.at(o+6) != 0 && board.at(o+6) == board.at(o+4) && board.at(o+6) == board.at(o+2)) return board.at(o+6);
-
-  return 0;
-}
-
 bool UltimateTicTacToeMontecarloAI::boardFull(Board const& board) const
 {
-  for(int const& v : board)
+  for(int const& v : board.grids)
   {
     if(v == 0)
     {
@@ -189,14 +199,7 @@ bool UltimateTicTacToeMontecarloAI::boardFull(Board const& board) const
 
 UltimateTicTacToeMontecarloAI::GameState UltimateTicTacToeMontecarloAI::gameState(Board const& board, int player) const
 {
-  Board bigGrid;
-  bigGrid.reserve(GRID_SIZE);
-  for(int i = 0; i < GRID_SIZE; ++i)
-  {
-    bigGrid.append(gridWinner(board, i));
-  }
-
-  int winner = gridWinner(bigGrid);
+  int winner = gridWinner(board.bigGrid);
 
   if(winner == player)
   {
@@ -216,16 +219,37 @@ UltimateTicTacToeMontecarloAI::GameState UltimateTicTacToeMontecarloAI::gameStat
   }
 }
 
+void UltimateTicTacToeMontecarloAI::printBoard(const UltimateTicTacToeMontecarloAI::Board &board) const
+{
+  for(int y = 0; y < 3; ++y)
+  {
+    for(int y2 = 0; y2 < 3; ++y2)
+    {
+      int o = y*3*GRID_SIZE + y2*3;
+      qDebug() << board.grids.at(o) << board.grids.at(o+1) << board.grids.at(o+2) << " "
+               << board.grids.at(o+9)<< board.grids.at(o+10)<< board.grids.at(o+11) << " "
+               << board.grids.at(o+18)<< board.grids.at(o+19)<< board.grids.at(o+20) << " ";
+    }
+    qDebug() << " ";
+  }
+
+  qDebug() << "* * * *";
+  for(int y = 0; y < 3; ++y)
+  {
+    qDebug() << "*" << board.bigGrid.at(y*3) << board.bigGrid.at(y*3+1) << board.bigGrid.at(y*3+2);
+  }
+}
+
 int UltimateTicTacToeMontecarloAI::simulate(Board board, int const previousMove, int const player) const
 {
-  int turn = otherPlayer(board.at(previousMove));
+  int turn = otherPlayer(board.grids.at(previousMove));
   GameState state = gameState(board, player);
   Move prev = previousMove;
   while(state == GameState::UNRESOLVED)
   {
     Moves options = movementOptions(board, prev);
     Move option = options.at(qrand() % options.size());
-    board[option] = turn;
+    playMove(board, option, turn);
     turn = otherPlayer(turn);
     state = gameState(board, player);
     prev = option;
@@ -259,12 +283,17 @@ UltimateTicTacToeMontecarloAI::UltimateTicTacToeMontecarloAI(QObject *parent) :
   });
 }
 
-void UltimateTicTacToeMontecarloAI::think(QVariantList board, int previousMove, int player)
+void UltimateTicTacToeMontecarloAI::think(QVariantList board, QVariantList bigGrid, int previousMove, int player)
 {
   Board b;
-  b.reserve(BOARD_SIZE);
+  b.grids.reserve(BOARD_SIZE);
   for(int i = 0; i < BOARD_SIZE; ++i) {
-    b.append(qvariant_cast<int>(board.at(i)));
+    b.grids.append(qvariant_cast<int>(board.at(i)));
+  }
+
+  b.bigGrid.reserve(GRID_SIZE);
+  for(int i = 0; i < GRID_SIZE; ++i) {
+    b.bigGrid.append(qvariant_cast<int>(bigGrid.at(i)));
   }
 
   futureWatcher.setFuture(QtConcurrent::run(this, &UltimateTicTacToeMontecarloAI::realThink, b, previousMove, player));
@@ -285,29 +314,30 @@ int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI
     Node const& leaf = nodes.at(leafIndex);
 
     GameState leafState = gameState(leaf.board, player);
-    if(leafState != GameState::UNRESOLVED)
+    if(leafState == GameState::WIN)
     {
       qDebug() << "---";
-      for(int y = 0; y < 3; ++y)
-      {
-        for(int y2 = 0; y2 < 3; ++y2)
-        {
-          int o = y*3*GRID_SIZE + y2*3;
-          qDebug() << leaf.board.at(o) << leaf.board.at(o+1) << leaf.board.at(o+2) << " "
-                   << leaf.board.at(o+9)<< leaf.board.at(o+10)<< leaf.board.at(o+11) << " "
-                   << leaf.board.at(o+18)<< leaf.board.at(o+19)<< leaf.board.at(o+20) << " ";
-        }
-        qDebug() << " ";
-      }
+      printBoard(leaf.board);
 
       break;
     }
-    int nodeIndex = expand(leafIndex, nodes, player);
+    else if(leafState == GameState::LOSE)
+    {
+      backpropagate(leafIndex, nodes, -10);
+    }
+    else if(leafState == GameState::TIE)
+    {
+      backpropagate(leafIndex, nodes, -5);
+    }
+    else if(leafState == GameState::UNRESOLVED)
+    {
+      int nodeIndex = expand(leafIndex, nodes, player);
 
-    Node const& node = nodes.at(nodeIndex);
-    int score = simulate(node.board,  node.previousMove, player);
+      Node const& node = nodes.at(nodeIndex);
+      int score = simulate(node.board,  node.previousMove, player);
 
-    backpropagate(nodeIndex, nodes, score);
+      backpropagate(nodeIndex, nodes, score);
+    }
   }
 
   qDebug() << "Found solution in " << i + 1 << " iterations";

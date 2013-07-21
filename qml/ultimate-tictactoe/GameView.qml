@@ -6,8 +6,12 @@ import UltimateTicTacToeAI 1.0
 Item {
   id: view
 
+  function defaultAiType() {
+    return {i: 500, c: 15, n: 10};
+  }
+
   property bool singlePlayer: false
-  property var aiType
+  property var aiType: defaultAiType()
   property bool aiIsThinking: false
 
   signal done
@@ -132,7 +136,8 @@ Item {
         var cellIndex = solution % (3*3);
         game.playTurn(bigCellIndex, cellIndex);
         aiIsThinking = false;*/
-        ai.think(board, game.previousMove, 2);
+
+        ai.think(board, game.getOwnerArray(), game.previousMove, 2);
       }
     }
 

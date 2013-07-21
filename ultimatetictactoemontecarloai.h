@@ -32,7 +32,7 @@ signals:
   void maxChildrenChanged(int value);
 
 public slots:
-  void think(QVariantList board, int previousMove, int player);
+  void think(QVariantList board, QVariantList bigGrid,int previousMove, int player);
 
 private:
   int maxIterations = 1000;
@@ -41,7 +41,13 @@ private:
 
   QFutureWatcher<int> futureWatcher;
 
-  typedef QList<int> Board;
+  typedef QList<int> Grid;
+  struct Board
+  {
+    Grid grids;
+    Grid bigGrid;
+  };
+
   typedef int Move;
   typedef QList<Move> Moves;
 
@@ -67,16 +73,17 @@ private:
   void backpropagate(int const nodeIndex, Nodes& nodes, int const score) const;
 
   int scoreBoard(Board const& board, int const player) const;
-  int scoreGrid(Board const& board, int const player, int const grid = 0) const;
+  int scoreGrid(const Grid &grid, int const player, const int gridIndex = 0) const;
   qreal nodeUCBValue(Node const& node, Nodes const& nodes) const;
   int pickBestChild(Node const& node, Nodes const& nodes, bool const ucb = true) const;
   Moves movementOptions(Board const& board, int const previousMove) const;
-  Board playMove(Board board, Move const move, int const player) const;
+  Board& playMove(Board& board, Move const move, int const player) const;
   int otherPlayer(int const player) const;
-  int gridWinner(Board const& board, int grid = 0) const;
+  int gridWinner(Grid const& grid, int gridIndex = 0) const;
   bool boardFull(Board const& board) const;
   GameState gameState(Board const& board, int player) const;
 
+  void printBoard(Board const& board) const;
 };
 
 #endif // ULTIMATETICTACTOEMONTECARLOAI_H
