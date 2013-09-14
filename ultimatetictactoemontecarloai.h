@@ -80,6 +80,7 @@ private:
   Board& playMove(Board& board, Move const move, int const player) const;
   int otherPlayer(int const player) const;
   int gridWinner(Grid const& grid, int gridIndex = 0) const;
+  bool gridFull(Grid const& grid, int gridIndex = 0) const;
   bool boardFull(Board const& board) const;
   GameState gameState(Board const& board, int player) const;
 

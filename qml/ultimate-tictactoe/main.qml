@@ -65,6 +65,7 @@ Rectangle {
 
   TitleView {
     id: titleView
+    showAITest: false
     anchors.fill: parent
 
     onOnePlayerGame: {
@@ -86,7 +87,7 @@ Rectangle {
     anchors.fill: parent
     onSelect: {
       var aiTypes = [
-            {i: 100, c: 10, n: 10},
+            {i: 100, c: 10, n: 5},
             {i: 500, c: 15, n: 10},
             {i: 1000, c: 30, n: 10},
             {i: 5000, c: 150, n: 10},

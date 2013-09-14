@@ -4,6 +4,8 @@ import QtGraphicalEffects 1.0
 Item {
   id: view
 
+  property bool showAITest: false
+
   signal onePlayerGame
   signal twoPlayerGame
   signal aiTest
@@ -81,14 +83,15 @@ Item {
       height: view.height / 12
       onClicked: view.twoPlayerGame()
     }
-/*
+
     Button {
+      visible: showAITest
       label.text: "AI Test"
       width: 2 * view.width / 3
       height: view.height / 12
       onClicked: view.aiTest()
     }
-*/
+
     Button {
       label.text: "Quit"
       width: 2 * view.width / 3

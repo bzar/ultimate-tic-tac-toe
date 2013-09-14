@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import "rules.js" as Rules
-import "ai.js" as AI
 import UltimateTicTacToeAI 1.0
 
 Item {
@@ -78,21 +77,11 @@ Item {
 
       var nextBigCellIndex = cellIndex;
       var nextBigCell = getCell(nextBigCellIndex);
-      var nextGrid = nextBigCell.grid;
-
-      var nextBigCellHasRoom = false;
-      for(var i = 0; i < 9; ++i) {
-        if(nextGrid.getCell(i).owner === 0) {
-          nextBigCellHasRoom = true;
-          break;
-        }
-      }
-
       var winner = Rules.gridWinner(getOwnerArray());
 
       turn = winner !== null && winner !== 0 ? winner : turn == 1 ? 2 : 1;
-      for(i = 0; i < 9; ++i) {
-        getCell(i).disabled = winner !== null || (i !== nextBigCellIndex && nextBigCellHasRoom);
+      for(var i = 0; i < 9; ++i) {
+        getCell(i).disabled = winner !== null || (i !== nextBigCellIndex && nextBigCell.owner === 0);
       }
 
       if(winner !== null) {
@@ -127,16 +116,6 @@ Item {
         }
 
         aiIsThinking = true;
-        /*aiWorker.sendMessage({aiType: aiType,
-                               board: board,
-                               previousMove: game.previousMove,
-                               player: 2});*/
-        /*var solution = AI.think(aiType, board, game.previousMove, 2);
-        var bigCellIndex = Math.floor(solution / (3*3));
-        var cellIndex = solution % (3*3);
-        game.playTurn(bigCellIndex, cellIndex);
-        aiIsThinking = false;*/
-
         ai.think(board, game.getOwnerArray(), game.previousMove, 2);
       }
     }
