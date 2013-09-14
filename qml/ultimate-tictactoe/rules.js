@@ -26,22 +26,15 @@ function gridWinner(c) {
   return boardFull ? 0 : null;
 }
 
-function boardWinner(c) {
-  var bigGrid = [];
-  for(var i = 0; i < 9; ++i) {
-    var grid = c.slice(i*9, (i+1)*9);
-    var winner = gridWinner(grid);
-    bigGrid.push(winner !== null ? winner : 0);
-  }
-
+function boardWinner(board, bigGrid) {
   var bigWinner = gridWinner(bigGrid);
 
   if(bigWinner !== null && bigWinner !== 0) {
     return bigWinner;
   } else {
     var boardFull = true;
-    for(i = 0; i < c.length; ++i) {
-      if(c[i] === 0) {
+    for(var i = 0; i < board.length; ++i) {
+      if(board[i] === 0) {
         boardFull = false;
         break;
       }

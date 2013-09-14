@@ -63,7 +63,7 @@ int UltimateTicTacToeMontecarloAI::pickBestChild(Node const& node, Nodes const& 
 {
   bool first = true;
   qreal bestChildValue = 0;
-  int bestChildIndex = 0;
+  int bestChildIndex = -1;
 
   for(int const childIndex : node.children)
   {
@@ -104,6 +104,7 @@ UltimateTicTacToeMontecarloAI::Moves UltimateTicTacToeMontecarloAI::movementOpti
         options.append(i);
       }
     }
+    //qDebug() << "Play to any grid," << options.size() << "options";
   }
   else
   {
@@ -115,6 +116,7 @@ UltimateTicTacToeMontecarloAI::Moves UltimateTicTacToeMontecarloAI::movementOpti
         options.append(position);
       }
     }
+    //qDebug() << "Play to grid" << gridIndex << "," << options.size() << "options";
   }
 
   return options;
@@ -258,7 +260,7 @@ void UltimateTicTacToeMontecarloAI::printBoard(const UltimateTicTacToeMontecarlo
 
 int UltimateTicTacToeMontecarloAI::simulate(Board board, int const previousMove, int const player) const
 {
-  int turn = otherPlayer(board.grids.at(previousMove));
+  int turn = previousMove > 0 ? otherPlayer(board.grids.at(previousMove)) : player;
   GameState state = gameState(board, player);
   Move prev = previousMove;
   while(state == GameState::UNRESOLVED)
@@ -317,6 +319,7 @@ void UltimateTicTacToeMontecarloAI::think(QVariantList board, QVariantList bigGr
 
 int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI::Board &board, const int previousMove, const int player) const
 {
+  //printBoard(board);
   if(maxIterations == 0) {
     Moves options = movementOptions(board, previousMove);
     return options.at(qrand() % options.size());
@@ -373,6 +376,7 @@ int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI
     Node const& child = nodes.at(childIndex);
     qDebug() << child.previousMove << ":" << child.v << child.n;
   }*/
+  //qDebug() << bestChild.previousMove / 9 << bestChild.previousMove %9;
   return bestChild.previousMove;
 }
 

@@ -51,7 +51,7 @@ Item {
       }
     }
 
-    var winner = Rules.boardWinner(board);
+    var winner = Rules.boardWinner(board, bigGrid);
 
     if(winner !== null) {
       if(winner === 1) {
