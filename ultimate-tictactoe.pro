@@ -25,5 +25,8 @@ SOURCES += main.cpp \
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
+OTHER_FILES += rpm/ultimate-tictactoe.spec \
+    rpm/ultimate-tictactoe.yaml
+
 HEADERS += \
     ultimatetictactoemontecarloai.h
