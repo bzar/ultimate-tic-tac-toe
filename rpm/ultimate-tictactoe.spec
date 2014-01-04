@@ -22,11 +22,13 @@ Source0:    %{name}-%{version}.tar.bz2
 Requires:   qt5-qtcore
 Requires:   qt5-qtgui
 Requires:   qt5-qtdeclarative
-BuildRequires:  qt5-qtdeclarative-qtquick
+Requires:  qt5-qtdeclarative-qtquick
+Requires:  qt5-qtconcurrent
 BuildRequires:  qt5-qtcore-devel
 BuildRequires:  qt5-qtgui-devel
 BuildRequires:  qt5-qtdeclarative-devel
 BuildRequires:  qt5-qtdeclarative-qtquick-devel
+BuildRequires:  qt5-qtconcurrent-devel
 BuildRequires:  desktop-file-utils
 
 %description
