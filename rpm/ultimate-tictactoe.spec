@@ -19,8 +19,11 @@ Group:      Games/BoardGame
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2
 #Source100:  ultimate-tictactoe.yaml
+Requires:   qt5-qtcore
+Requires:   qt5-qtgui
 Requires:   qt5-qtdeclarative
 BuildRequires:  qt5-qtcore-devel
+BuildRequires:  qt5-qtgui-devel
 BuildRequires:  qt5-qtdeclarative-devel
 BuildRequires:  desktop-file-utils
 
