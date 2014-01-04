@@ -35,9 +35,9 @@ public slots:
   void think(QVariantList board, QVariantList bigGrid,int previousMove, int player);
 
 private:
-  int maxIterations = 1000;
-  int c = 15;
-  int maxChildren = 10;
+  int maxIterations;
+  int c;
+  int maxChildren;
 
   QFutureWatcher<int> futureWatcher;
 

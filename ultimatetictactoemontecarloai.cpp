@@ -7,7 +7,6 @@
 int const GRID_SIZE  = 9;
 int const BOARD_SIZE  = GRID_SIZE * GRID_SIZE;
 
-
 int UltimateTicTacToeMontecarloAI::scoreBoard(Board const& board, int const player) const
 {
   int score = 0;
@@ -294,7 +293,7 @@ void UltimateTicTacToeMontecarloAI::backpropagate(int const nodeIndex, Nodes& no
 }
 
 UltimateTicTacToeMontecarloAI::UltimateTicTacToeMontecarloAI(QObject *parent) :
-  QObject(parent)
+  QObject(parent), maxIterations(1000), c(15), maxChildren(10)
 {
   connect(&futureWatcher, &QFutureWatcher<int>::finished, [&]() {
     emit this->result(futureWatcher.future().result());
@@ -325,7 +324,7 @@ int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI
     return options.at(qrand() % options.size());
   }
 
-  qint64 now = QDateTime::currentMSecsSinceEpoch();
+  //qint64 now = QDateTime::currentMSecsSinceEpoch();
   //qDebug() << "c: " << c << ", maxIterations: " << maxIterations << ", maxChildren: " <<maxChildren;
   Nodes nodes;
   nodes.reserve(maxIterations * maxChildren);
