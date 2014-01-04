@@ -12,22 +12,20 @@ Name:       ultimate-tictactoe
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    My first SailfishOS application!
+Summary:    Ultimate Tic-Tac-Toe with AI opponents
 Version:    0.1
 Release:    1
-Group:      Qt/Qt
+Group:      Games/BoardGame
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2
-Source100:  ultimate-tictactoe.yaml
-Requires:   sailfishsilica-qt5
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Qml)
-BuildRequires:  pkgconfig(Qt5Quick)
-BuildRequires:  pkgconfig(sailfishapp)
+#Source100:  ultimate-tictactoe.yaml
+Requires:   qt5-qtdeclarative
+BuildRequires:  qt5-qtcore-devel
+BuildRequires:  qt5-qtdeclarative-devel
 BuildRequires:  desktop-file-utils
 
 %description
-Short description of my SailfishOS Application
+Ultimate Tic-Tac-Toe with AI opponents
 
 
 %prep
