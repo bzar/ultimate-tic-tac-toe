@@ -1,32 +1,27 @@
+TARGET=ultimate-tictactoe
+
 # Use C++11
-CONFIG += c++11
+CONFIG += c++11 sailfishapp
 
-# Add more folders to ship with the application, here
-folder_01.source = qml/ultimate-tictactoe
-folder_01.target = qml
-DEPLOYMENTFOLDERS = folder_01
-
-# Additional import path used to resolve QML modules in Creator's code model
-QML_IMPORT_PATH =
-
-# If your application uses the Qt Mobility libraries, uncomment the following
-# lines and add the respective components to the MOBILITY variable.
-# CONFIG += mobility
-# MOBILITY +=
-
-# The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     ultimatetictactoemontecarloai.cpp
 
-# Installation path
-# target.path =
-
-# Please do not modify the following two lines. Required for deployment.
-include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
-qtcAddDeployment()
-
 OTHER_FILES += rpm/ultimate-tictactoe.spec \
-    rpm/ultimate-tictactoe.yaml
+    rpm/ultimate-tictactoe.yaml \
+    ultimate-tictactoe.desktop \
+    qml/DifficultySelectView.qml \
+    qml/TicTacToeCell.qml \
+    qml/Button.qml \
+    qml/TicTacToeGrid.qml \
+    qml/UltimateTicTacToeGrid.qml \
+    qml/UltimateTicTacToeCell.qml \
+    qml/cog.png \
+    qml/TitleView.qml \
+    qml/GameView.qml \
+    qml/rules.js \
+    qml/AITestView.qml \
+    qml/main.qml \
+    qml/cog.png
 
 HEADERS += \
     ultimatetictactoemontecarloai.h

@@ -12,27 +12,23 @@ Name:       ultimate-tictactoe
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    Ultimate Tic-Tac-Toe with AI opponents
+Summary:    My first SailfishOS application!
 Version:    0.1
 Release:    1
-Group:      Games/BoardGame
+Group:      Qt/Qt
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2
-#Source100:  ultimate-tictactoe.yaml
-Requires:   qt5-qtcore
-Requires:   qt5-qtgui
-Requires:   qt5-qtdeclarative
-Requires:  qt5-qtdeclarative-qtquick
-Requires:  qt5-qtconcurrent
-BuildRequires:  qt5-qtcore-devel
-BuildRequires:  qt5-qtgui-devel
-BuildRequires:  qt5-qtdeclarative-devel
-BuildRequires:  qt5-qtdeclarative-qtquick-devel
-BuildRequires:  qt5-qtconcurrent-devel
+Source100:  ultimate-tictactoe.yaml
+Requires:   sailfishsilica-qt5
+Requires:   qt5-qtgraphicaleffects
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(sailfishapp)
 BuildRequires:  desktop-file-utils
 
 %description
-Ultimate Tic-Tac-Toe with AI opponents
+Short description of my SailfishOS Application
 
 
 %prep
@@ -67,15 +63,9 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-/usr/share/icons/hicolor/90x90/apps
-/usr/share/applications
-/usr/share/ultimate-tictactoe
-/usr/bin
-%{_datadir}/icons/hicolor/90x90/apps/%{name}.png
-%{_datadir}/applications/%{name}.desktop
-%{_datadir}/%{name}/qml
 %{_bindir}
-/opt/ultimate-tictactoe/bin
-/opt/ultimate-tictactoe/qml
+%{_datadir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 # >> files
 # << files

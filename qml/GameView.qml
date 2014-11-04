@@ -120,18 +120,6 @@ Item {
       }
     }
 
-    WorkerScript {
-      id: aiWorker
-      source: "aiWorker.js"
-      onMessage: {
-        aiIsThinking = false;
-        var solution = messageObject.solution;
-        var bigCellIndex = Math.floor(solution / (3*3));
-        var cellIndex = solution % (3*3);
-        game.playTurn(bigCellIndex, cellIndex);
-      }
-    }
-
     Image {
       id: thinkingIndicator
       source: "cog.png"
