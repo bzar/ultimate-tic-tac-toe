@@ -1,13 +1,13 @@
 Name: ultimate-tictactoe
-Summary: My first SailfishOS application!
+Summary: Ultimate tic-tac-toe game
 Version: 0.1
 Release: 1
-Group: Qt/Qt
-License: LICENSE
+Group: Game/BoardGame
+License: GPLv2
 Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
-  Short description of my SailfishOS Application
+  A game where you play the small tic-tac-toe grids to play the bigger ones. Includes a rudimentary AI opponent.
 Configure: none
 Builder: qtc5
 PkgConfigBR:
