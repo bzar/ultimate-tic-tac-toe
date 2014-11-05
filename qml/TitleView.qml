@@ -5,6 +5,7 @@ Item {
   id: view
 
   property bool showAITest: false
+  property bool showQuit: false
 
   signal onePlayerGame
   signal twoPlayerGame
@@ -93,6 +94,7 @@ Item {
     }
 
     Button {
+      visible: showQuit
       label.text: "Quit"
       width: 2 * view.width / 3
       height: view.height / 12

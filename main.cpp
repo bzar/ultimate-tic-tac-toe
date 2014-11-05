@@ -1,4 +1,5 @@
 #include <QtGui/QGuiApplication>
+#include <QtQuick/QQuickView>
 #include <QtQml>
 #include "ultimatetictactoemontecarloai.h"
 #include <sailfishapp.h>

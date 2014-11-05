@@ -10,6 +10,7 @@ ApplicationWindow
             TitleView {
               id: titleView
               showAITest: false
+              showQuit: false
               anchors.fill: parent
 
               onOnePlayerGame: {
@@ -21,8 +22,6 @@ ApplicationWindow
                 gameView.reset();
                 pageStack.push(gamePage);
               }
-
-              onQuit: Qt.quit()
             }
         }
     }
