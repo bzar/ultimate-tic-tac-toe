@@ -13,7 +13,7 @@ Name:       ultimate-tictactoe
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Ultimate tic-tac-toe game
-Version:    0.1
+Version:    1.1
 Release:    1
 Group:      Game/BoardGame
 License:    GPLv2
