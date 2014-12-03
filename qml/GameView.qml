@@ -62,7 +62,7 @@ Item {
       var grid = bigCell.grid;
       var cell = grid.getCell(cellIndex);
 
-      if(cell.disabled)
+      if(cell.disabled || cell.owner !== 0)
         return;
 
       cell.owner = turn;
