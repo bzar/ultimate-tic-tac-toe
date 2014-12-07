@@ -80,8 +80,11 @@ Item {
       var winner = Rules.gridWinner(getOwnerArray());
 
       turn = winner !== null && winner !== 0 ? winner : turn == 1 ? 2 : 1;
+
+      var playAnyGrid = nextBigCell.owner !== 0 || nextBigCell.grid.full;
       for(var i = 0; i < 9; ++i) {
-        getCell(i).disabled = winner !== null || (i !== nextBigCellIndex && nextBigCell.owner === 0);
+        var c = getCell(i);
+        c.disabled = winner !== null || c.owner !== 0 || c.grid.full || (i !== nextBigCellIndex && !playAnyGrid);
       }
 
       if(winner !== null) {

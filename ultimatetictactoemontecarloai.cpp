@@ -50,12 +50,10 @@ int UltimateTicTacToeMontecarloAI::scoreGrid(Grid const& grid, int const player,
 }
 
 qreal UltimateTicTacToeMontecarloAI::nodeUCBValue(Node const& node, Nodes const& nodes) const {
-  if(node.parent != -1)
-  {
-    return node.v + c * qSqrt(qLn(nodes.at(node.parent).n) / node.n);
-  } else {
+  if(node.parent == -1)
     return 0;
-  }
+
+  return static_cast<qreal>(node.v)/node.n + c * qSqrt(qLn(nodes.at(node.parent).n) / node.n);
 }
 
 int UltimateTicTacToeMontecarloAI::pickBestChild(Node const& node, Nodes const& nodes, bool const ucb) const
@@ -96,11 +94,18 @@ UltimateTicTacToeMontecarloAI::Moves UltimateTicTacToeMontecarloAI::movementOpti
 
   if(playAny)
   {
-    for(int i = 0; i < BOARD_SIZE; ++i)
+    for(int i = 0; i < GRID_SIZE; ++i)
     {
-      if(board.grids.at(i) == 0)
+      if(gridFull(board.grids, i) || gridWinner(board.grids, i))
+          continue;
+
+      for(int j = 0; j < GRID_SIZE; ++j)
       {
-        options.append(i);
+        int index = i * GRID_SIZE + j;
+        if(board.grids.at(index) == 0)
+        {
+          options.append(index);
+        }
       }
     }
     //qDebug() << "Play to any grid," << options.size() << "options";
@@ -204,12 +209,10 @@ int UltimateTicTacToeMontecarloAI::expand(int leafIndex, Nodes& nodes, int const
 
 bool UltimateTicTacToeMontecarloAI::boardFull(Board const& board) const
 {
-  for(int const& v : board.grids)
+  for(int i = 0; i < GRID_SIZE; ++i)
   {
-    if(v == 0)
-    {
+    if(!gridFull(board.grids, i) && !gridWinner(board.grids, i))
       return false;
-    }
   }
   return true;
 }
@@ -275,7 +278,8 @@ int UltimateTicTacToeMontecarloAI::simulate(Board board, int const previousMove,
   switch(state)
   {
     case GameState::WIN: return 1;
-    case GameState::LOSE: return -1;
+    case GameState::TIE: return 0;
+    case GameState::LOSE: return 0;
     default: return 0;
   }
 }
@@ -318,6 +322,9 @@ void UltimateTicTacToeMontecarloAI::think(QVariantList board, QVariantList bigGr
 
 int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI::Board &board, const int previousMove, const int player) const
 {
+  //qDebug() << "* * * * * * * *";
+  //qDebug() << "Player" << player;
+
   //printBoard(board);
   if(maxIterations == 0) {
     Moves options = movementOptions(board, previousMove);
@@ -331,6 +338,7 @@ int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI
   nodes.append(Node { 0, 1, board, previousMove, -1, Node::Children() });
 
   int i;
+  int bestChildIndex = -1;
   for(i = 0; i < maxIterations; ++i)
   {
     int leafIndex = select(nodes);
@@ -339,18 +347,24 @@ int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI
     GameState leafState = gameState(leaf.board, player);
     if(leafState == GameState::WIN)
     {
-/*      qDebug() << "---";
-      printBoard(leaf.board);
-*/
+      //qDebug() << "Found win state!";
+      //printBoard(board);
+      bestChildIndex = leafIndex;
+      Node const* node = &leaf;
+      while(nodes.at(node->parent).parent != -1)
+      {
+        bestChildIndex = node->parent;
+        node = &nodes.at(bestChildIndex);
+      }
       break;
     }
     else if(leafState == GameState::LOSE)
     {
-      backpropagate(leafIndex, nodes, -10);
+      backpropagate(leafIndex, nodes, 0);
     }
     else if(leafState == GameState::TIE)
     {
-      backpropagate(leafIndex, nodes, -5);
+      backpropagate(leafIndex, nodes, 0);
     }
     else if(leafState == GameState::UNRESOLVED)
     {
@@ -365,17 +379,32 @@ int UltimateTicTacToeMontecarloAI::realThink(const UltimateTicTacToeMontecarloAI
 
   //qDebug() << "Found solution in " << i + 1 << " iterations";
   Node const& root = nodes.at(0);
-  int bestChildIndex = pickBestChild(root, nodes, false);
+  if(bestChildIndex == -1)
+  {
+    bestChildIndex = pickBestChild(root, nodes, false);
+  }
   Node const& bestChild = nodes.at(bestChildIndex);
+//  qDebug() << "MovementOptions:" << movementOptions(board, previousMove);
+  //qDebug() << "Root children: " << root.children;
+
+//  qDebug() << "Nodes size: " << nodes.size();
 
   //qDebug() << "AI took " << (QDateTime::currentMSecsSinceEpoch() - now) << " ms";
 
-  /*for(int childIndex : root.children)
+  /*qDebug() << "Root children values";
+  for(int childIndex : root.children)
   {
     Node const& child = nodes.at(childIndex);
-    qDebug() << child.previousMove << ":" << child.v << child.n;
-  }*/
-  //qDebug() << bestChild.previousMove / 9 << bestChild.previousMove %9;
+    if(bestChildIndex == childIndex)
+    {
+      qDebug() << child.previousMove << ":" << child.v << child.n << "|" << static_cast<qreal>(child.v) / child.n << "+" << c*qSqrt(qLn(nodes.at(child.parent).n) / child.n) << "=" << nodeUCBValue(child, nodes) << "<";
+    }
+    else
+    {
+      qDebug() << child.previousMove << ":" << child.v << child.n << "|" << static_cast<qreal>(child.v) / child.n << "+" << c*qSqrt(qLn(nodes.at(child.parent).n) / child.n) << "=" << nodeUCBValue(child, nodes);
+    }
+  }
+  qDebug() << bestChild.previousMove / 9 << bestChild.previousMove %9;*/
   return bestChild.previousMove;
 }
 
@@ -393,12 +422,12 @@ void UltimateTicTacToeMontecarloAI::setMaxChildren(int value)
   }
 }
 
-int UltimateTicTacToeMontecarloAI::getC() const
+qreal UltimateTicTacToeMontecarloAI::getC() const
 {
   return c;
 }
 
-void UltimateTicTacToeMontecarloAI::setC(int value)
+void UltimateTicTacToeMontecarloAI::setC(qreal value)
 {
   if(value != c)
   {

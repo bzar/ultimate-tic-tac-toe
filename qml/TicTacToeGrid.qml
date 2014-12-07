@@ -8,6 +8,7 @@ Grid {
   signal clicked(int cellIndex)
 
   property bool disabled
+  property bool full: getOwnerArray().filter(function(o) { return o === 0; }).length === 0
 
   function getCell(index) {
     return children[index].cell;
@@ -16,7 +17,10 @@ Grid {
   function getOwnerArray() {
     var owners = [];
     for(var i = 0; i < 9; ++i) {
-      owners.push(getCell(i).owner);
+      var cell = getCell(i);
+      if(cell === undefined)
+        break;
+      owners.push(cell.owner);
     }
     return owners;
   }

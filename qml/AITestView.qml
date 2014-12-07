@@ -13,6 +13,9 @@ Item {
   property int games: ai1Wins + ai2Wins + ties;
   property int n: 10;
 
+  width: childrenRect.width
+  height: childrenRect.height
+
   function initialize() {
     var b = [];
     var i;
@@ -32,18 +35,13 @@ Item {
   }
 
   function play(player, move) {
-    var gridIndex = move % 9;
+    var gridIndex = parseInt(move / 9);
     var b = board;
     b[move] = player;
     board = b;
 
     if(bigGrid[gridIndex] === 0) {
-      var grid = [];
-      for(var i = 0; i < 9; ++i) {
-        grid.push(board[gridIndex * 9 + i]);
-      }
-
-      var gridWinner = Rules.gridWinner(grid);
+      var gridWinner = Rules.gridWinnerWithOffset(board, gridIndex*9);
       if(gridWinner !== null) {
         var bg = bigGrid;
         bg[gridIndex] = gridWinner;
@@ -90,7 +88,7 @@ Item {
   Montecarlo {
     id: ai1
     maxIterations: parseInt(i1.text)
-    c: parseInt(c1.text)
+    c: parseFloat(c1.text)
     maxChildren: parseInt(n1.text)
     onResult: play(1, move);
   }
@@ -98,7 +96,7 @@ Item {
   Montecarlo {
     id: ai2
     maxIterations: parseInt(i2.text)
-    c: parseInt(c2.text)
+    c: parseFloat(c2.text)
     maxChildren: parseInt(n2.text)
     onResult: play(2, move);
   }

@@ -13,14 +13,14 @@ public:
   explicit UltimateTicTacToeMontecarloAI(QObject *parent = 0);
 
   Q_PROPERTY(int maxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY maxIterationsChanged)
-  Q_PROPERTY(int c READ getC WRITE setC NOTIFY cChanged)
+  Q_PROPERTY(qreal c READ getC WRITE setC NOTIFY cChanged)
   Q_PROPERTY(int maxChildren READ getMaxChildren WRITE setMaxChildren NOTIFY maxChildrenChanged)
 
   int getMaxIterations() const;
   void setMaxIterations(int value);
 
-  int getC() const;
-  void setC(int value);
+  qreal getC() const;
+  void setC(qreal value);
 
   int getMaxChildren() const;
   void setMaxChildren(int value);
@@ -28,7 +28,7 @@ public:
 signals:
   void result(int move);
   void maxIterationsChanged(int value);
-  void cChanged(int value);
+  void cChanged(qreal value);
   void maxChildrenChanged(int value);
 
 public slots:
@@ -36,7 +36,7 @@ public slots:
 
 private:
   int maxIterations;
-  int c;
+  qreal c;
   int maxChildren;
 
   QFutureWatcher<int> futureWatcher;
